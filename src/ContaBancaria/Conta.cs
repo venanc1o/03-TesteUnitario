@@ -35,6 +35,8 @@ public class Conta
         Ativa = true;
     }
 
+
+
     /// <summary>
     /// Deposita um valor na conta.
     /// Regras:
@@ -45,8 +47,16 @@ public class Conta
     public void Depositar(decimal valor)
     {
         // TODO: Implemente usando TDD
-        throw new NotImplementedException();
+        if (valor <= 0)
+            throw new ArgumentException("Valor deve ser maior que zero");
+
+        if (!Ativa)
+            throw new InvalidOperationException("Conta inativa");
+
+        Saldo += valor;
+
     }
+
 
     /// <summary>
     /// Saca um valor da conta.
@@ -59,7 +69,16 @@ public class Conta
     public void Sacar(decimal valor)
     {
         // TODO: Implemente usando TDD
-        throw new NotImplementedException();
+        if (valor <= 0)
+            throw new ArgumentException("Valor deve ser maior que zero");
+
+        if (!Ativa)
+            throw new InvalidOperationException("Conta inativa");
+
+        if (valor > Saldo)
+            throw new InvalidOperationException("Saldo insuficiente");
+
+        Saldo -= valor;
     }
 
     /// <summary>
@@ -73,7 +92,18 @@ public class Conta
     public void Transferir(Conta destino, decimal valor)
     {
         // TODO: Implemente usando TDD
-        throw new NotImplementedException();
+        if (valor <= 0)
+            throw new ArgumentException("Valor deve ser maior que zero");
+
+        if (!Ativa || !destino.Ativa)
+            throw new InvalidOperationException("Conta inativa");
+
+        if (valor > Saldo)
+            throw new InvalidOperationException("Saldo insuficiente");
+
+        // lógica reutilizando métodos existentes (boa prática)
+        this.Sacar(valor);
+        destino.Depositar(valor);
     }
 
     /// <summary>
@@ -86,6 +116,16 @@ public class Conta
     public void Encerrar()
     {
         // TODO: Implemente usando TDD
-        throw new NotImplementedException();
+        if (!Ativa)
+            throw new InvalidOperationException("Conta já está inativa");
+
+        if (Saldo != 0)
+            throw new InvalidOperationException("Conta com saldo não pode ser encerrada");
+
+        Ativa = false;
     }
+}
+
+internal class FactAttribute : Attribute
+{
 }
